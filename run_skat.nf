@@ -75,6 +75,6 @@ process manhattan {
 
   shell:
   '''
-  Rscript !{baseDir}/bin/manhattan_plot.R
+  Rscript !{baseDir}/bin/manhattan_plot.R --manhattan_plot_function=!{baseDir}/bin/manhattan_plot_function.R
   '''
 }
