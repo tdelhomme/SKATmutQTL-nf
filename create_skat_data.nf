@@ -85,6 +85,8 @@ process output_windows {
 
 process create_input {
 
+  publishDir params.output_folder, mode: 'copy', pattern: "*.Rdata"
+
   tag {tag}
 
   input:

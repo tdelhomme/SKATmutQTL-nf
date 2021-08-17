@@ -16,12 +16,12 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 params.help = null
-params.df_windows = null
-
+params.input_folder = null
+params.output_folder = "skat_output"
 
 log.info ""
 log.info "-----------------------------------------------------------------------"
-log.info "create_skat_data.nf"
+log.info "run_skat.nf"
 log.info "-----------------------------------------------------------------------"
 log.info "Copyright (C) IRB Barcelona"
 log.info "This program comes with ABSOLUTELY NO WARRANTY; for details see LICENSE"
@@ -36,13 +36,10 @@ if (params.help) {
     log.info "nextflow run main.nf [OPTIONS]"
     log.info ""
     log.info "Mandatory arguments:"
-    log.info "--df_windows                R file                 File .Rdata containing the dataframe of the windows"
-    log.info "--somatic_folder            FOLDER                 Folder containing the somatic files"
-    log.info "--somatic_files             FILE                   Text file containing the list of somatic files to analyze"
-    log.info "--germline_VCF              FILE                   VCF file containing the genotypes"
+    log.info "--input_folder              FOLDER                 Folder containing one input file per window from the create_skat_data.nf script"
     log.info ""
     log.info "Optional arguments:"
-    log.info '--output_folder             FOLDER                 Output folder (default: input_data)'
+    log.info '--output_folder             FOLDER                 Output folder (default: skat_output)'
     log.info ""
     log.info "Flags:"
     log.info "--help                                             Display this message"
@@ -50,4 +47,20 @@ if (params.help) {
     exit 1
 }
 
-assert (params.df_windows != null) : "please provide the --df_windows option"
+assert (params.input_folder != null) : "please provide the --input_folder option"
+
+input_files = Channel.fromPath( params.input_folder+'/*.Rdata' )
+
+process skat {
+
+  input:
+  file f from input_files
+
+  output:
+  file 'chr*' into wind_list mode flatten
+
+  shell:
+  '''
+  Rscript !{baseDir}/bin/SKAT.R --input_file=!{f}
+  '''
+}
