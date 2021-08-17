@@ -32,7 +32,7 @@ if(is.na(input_data$mat_geno)){
   X = matrix(rep(0, nrow(Z)), ncol=1)
   
   obj <- SKAT_Null_Model(y ~ X, out_type="C")
-  pval = SKAT(Z, obj)$p.value
+  pval = SKAT(Z, obj, method = "optimaal.adj")$p.value
 }
 
 save(pval, file = paste(gsub("_input_skat.Rdata", "", input_file), "_pvalue", sep=""))

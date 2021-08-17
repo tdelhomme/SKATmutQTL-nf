@@ -57,10 +57,24 @@ process skat {
   file f from input_files
 
   output:
-  file 'chr*' into wind_list mode flatten
+  file '*pvalue' into skatpvalues
 
   shell:
   '''
   Rscript !{baseDir}/bin/SKAT.R --input_file=!{f}
+  '''
+}
+
+process manhattan {
+
+  input:
+  file f from skatpvalues.collect()
+
+  output:
+  file '*.pdf' into wind_list
+
+  shell:
+  '''
+  Rscript !{baseDir}/bin/manhattan_plot.R
   '''
 }
