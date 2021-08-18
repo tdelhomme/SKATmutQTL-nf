@@ -109,7 +109,15 @@ if(length(table(as.numeric(mat_pheno[,1]))) == 0 | nrow(vcf_chunk) == 0 ){
   mat_geno = t(all_res[, 4:ncol(all_res)])
   rownames(mat_geno) = colnames(all_res)[4:ncol(all_res)]
   colnames(mat_geno) = all_res$rs
-  mat_geno = mat_geno[rownames(mat_pheno),] # re-order similarly to the somatic samples
+  # match with somatic names
+  rownames(mat_geno) = unlist(lapply(rownames(mat_geno), function(x){
+    if(!(grepl("DNA", x))) {res = unlist(strsplit(x,"_"))[1]} else {res=x}
+    if(grepl("DNA", x)) return(gsub("-DNA_", "_DNA_", res))
+    if(grepl("SM", x)) return(gsub("SM-", "SM_", res))
+    if(!(grepl("DNA", x)) & !(grepl("SM", x))) return(res)
+  }))
+  kept_sm = intersect(rownames(mat_pheno, mat_geno))
+  mat_geno = mat_geno[kept_sm,] # re-order similarly to the somatic samples
   
   input_data = list("mat_geno" = mat_geno, "mat_pheno" = mat_pheno)
   

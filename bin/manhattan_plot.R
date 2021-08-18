@@ -43,3 +43,4 @@ library(qqman)
 dd$snp = "snp"
 dd$chr_name = as.numeric(gsub("chr", "", dd$chr))
 manhattan(dd, chr="chr_name", bp="pos", p="pvalues", snp="snp")
+
