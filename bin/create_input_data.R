@@ -116,7 +116,7 @@ if(length(table(as.numeric(mat_pheno[,1]))) == 0 | nrow(vcf_chunk) == 0 ){
     if(grepl("SM", x)) return(gsub("SM-", "SM_", res))
     if(!(grepl("DNA", x)) & !(grepl("SM", x))) return(res)
   }))
-  kept_sm = intersect(rownames(mat_pheno, mat_geno))
+  kept_sm = intersect(rownames(mat_pheno), rownames(mat_geno))
   mat_geno = mat_geno[kept_sm,] # re-order similarly to the somatic samples
   
   input_data = list("mat_geno" = mat_geno, "mat_pheno" = mat_pheno)
