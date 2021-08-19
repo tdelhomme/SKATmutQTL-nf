@@ -21,6 +21,7 @@ params.somatic_folder = null
 params.somatic_files = null
 params.germline_VCF = null
 params.output_folder = "input_data"
+params.mem = 8
 
 log.info ""
 log.info "-----------------------------------------------------------------------"
@@ -46,6 +47,7 @@ if (params.help) {
     log.info ""
     log.info "Optional arguments:"
     log.info '--output_folder             FOLDER                 Output folder (default: input_data)'
+    log.info '--mem                       INT                    Memory to allocate'
     log.info ""
     log.info "Flags:"
     log.info "--help                                             Display this message"
@@ -71,6 +73,8 @@ df_windows = file(params.df_windows)
 
 process output_windows {
 
+  memory params.mem+'G'
+
   input:
   file df_windows
 
@@ -84,6 +88,8 @@ process output_windows {
 }
 
 process create_input {
+
+  memory params.mem+'G'
 
   publishDir params.output_folder, mode: 'copy', pattern: "*.Rdata"
 
