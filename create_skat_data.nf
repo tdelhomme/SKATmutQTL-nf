@@ -103,7 +103,11 @@ process create_input {
   tag = w
   '''
   bcftools view -r !{w} !{germline_VCF} | bgzip -c > window.vcf.gz
-  tabix -p vcf window.vcf.gz
-  Rscript !{baseDir}/bin/create_input_data.R --w=!{w} --somatic_files=!{somatic_files} --somatic_folder=!{somatic_folder} --germline_VCF=window.vcf.gz
+  if [[ $(zcat window.vcf.gz | grep "^chr" | head -n1) ]]; then
+    tabix -p vcf window.vcf.gz
+    Rscript !{baseDir}/bin/create_input_data.R --w=!{w} --somatic_files=!{somatic_files} --somatic_folder=!{somatic_folder} --germline_VCF=window.vcf.gz
+  else 
+    echo "empty germline window"
+  fi
   '''
 }
