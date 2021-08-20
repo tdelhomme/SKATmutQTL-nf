@@ -67,6 +67,8 @@ process skat {
 
 process manhattan {
 
+  publishDir params.output_folder, mode: 'copy', pattern: "*.pdf"
+
   input:
   file f from skatpvalues.collect()
 
