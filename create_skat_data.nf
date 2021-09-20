@@ -79,7 +79,7 @@ process output_windows {
   file df_windows
 
   output:
-  file 'chr*' into wind_list mode flatten
+  file 'window*' into wind_list mode flatten
 
   shell:
   '''
@@ -96,7 +96,7 @@ process create_input {
   tag {tag}
 
   input:
-  file w from wind_list
+  file wist from wind_list
   file somatic_files
   file somatic_folder
   file germline_VCF
