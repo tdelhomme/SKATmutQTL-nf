@@ -13,16 +13,28 @@ if(! is.null(args$help)) {
   cat("
       Mandatory arguments:
       --df_windows                 - Input Rdata file that contains all the windows to be splitted
+      --nwindow_list               - number of chunks containing all the windows
       Optional arguments:
       --help \n\n")
   q(save="no")
 }
 
 if(is.null(args$df_windows)) {stop("Option --df_windows should be provided")} else{df_windows=args$df_windows}
+if(is.null(args$nwindow_list)) {stop("Option --nwindow_list should be provided")} else{nwindow_list=as.numeric(args$nwindow_list)}
 load(df_windows)
 
 # create one empty file per window to run the scripts in parallel across windows
+list_w = c()
 for (id in 1:nrow(df_window_merge)){
   w = paste(df_window_merge[id,"chr"], ":", df_window_merge[id,"start"], "-", df_window_merge[id,"end"], sep="")
-  system(paste("touch ", w, sep=""))
+  #system(paste("touch ", w, sep=""))
+  list_w = c(list_w , w)
+}
+chunk <- function(x, n) split(x, sort(rank(x) %% n))
+res = chunk(list_w, n = nwindow_list)
+for(idl in length(res)){
+  r = res[[idl]]
+  for(rr in r){
+    cat(r, file=paste("windows_id_", idl, ".txt", sep=""), append=T, sep= "\n")
+  }
 }
