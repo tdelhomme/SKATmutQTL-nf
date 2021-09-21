@@ -27,17 +27,14 @@ library(readr)
 if(is.null(args$somatic_files)) {stop("Option --somatic_files should be provided")} else{somatic_files=args$somatic_files}
 if(is.null(args$somatic_folder)) {stop("Option --somatic_folder should be provided")} else{somatic_folder=args$somatic_folder}
 
-print(paste(date(), " INFO: working on the window ", w, sep=""))
-
 #############################
 ##### SOMATIC PHENOTYPE #####
 
 t2in<-fread(somatic_files, head=FALSE)
 files <- as.character(t2in$V1)
 
-res = lapply(files, function(f){
-  
-  #load data
+#load data
+all_gr_mut = lapply(files, function(f){
   ff = system(paste("ls ", somatic_folder, "/*", f, ".csv", sep=""), intern=T)
   mut = read_csv(ff)
   
@@ -51,5 +48,6 @@ res = lapply(files, function(f){
   # make a VRange obj
   gr_mut = GRanges(seqnames = mut$chr, ranges = IRanges(start = mut$start, end = mut$end))
 })
+names(all_gr_mut) = files
 
-save(gr_mut, file="gr_mut_somatic.Rdata")
+save(all_gr_mut, file="gr_mut_somatic.Rdata")

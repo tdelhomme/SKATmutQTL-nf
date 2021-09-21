@@ -115,7 +115,7 @@ process create_input {
   tag {tag}
 
   input:
-  file wist from wind_list
+  file wlist from wind_list
   file somatic_Rdata from somatic_all 
   file somatic_files
   file somatic_folder
@@ -131,7 +131,7 @@ process create_input {
   bcftools view -r !{w} !{germline_VCF} | bgzip -c > window.vcf.gz
   if [[ $(zcat window.vcf.gz | grep "^chr" | head -n1) ]]; then
     tabix -p vcf window.vcf.gz
-    Rscript !{baseDir}/bin/create_input_data.R --w=!{w} --somatic_Rdata=!{somatic_Rdata} --somatic_files=!{somatic_files} --somatic_folder=!{somatic_folder} --germline_VCF=window.vcf.gz
+    Rscript !{baseDir}/bin/create_input_data.R --wlist=!{wlist} --somatic_Rdata=!{somatic_Rdata} --somatic_files=!{somatic_files} --somatic_folder=!{somatic_folder} --germline_VCF=window.vcf.gz
   else 
     echo "empty germline window"
   fi
