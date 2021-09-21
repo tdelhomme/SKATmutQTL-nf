@@ -128,6 +128,6 @@ process create_input {
   shell:
   tag = wlist
   '''
-  Rscript !{baseDir}/bin/create_input_data.R --wlist=!{wlist} --somatic_Rdata=!{somatic_Rdata} --somatic_files=!{somatic_files} --somatic_folder=!{somatic_folder} --germline_VCF=window.vcf.gz
+  Rscript !{baseDir}/bin/create_input_data.R --wlist=!{wlist} --somatic_Rdata=!{somatic_Rdata} --somatic_files=!{somatic_files} --somatic_folder=!{somatic_folder} --germline_VCF=!{germline_VCF}
   '''
 }

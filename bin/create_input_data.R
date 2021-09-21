@@ -32,12 +32,12 @@ if(is.null(args$somatic_folder)) {stop("Option --somatic_folder should be provid
 if(is.null(args$germline_VCF)) {stop("Option --germline_VCF should be provided")} else{germline_VCF=args$germline_VCF}
 if(is.null(args$wlist)) {stop("Option --wlist should be provided")} else{all_w = as.character(read.table(args$wlist)[,1])}
 
-print(paste(date(), " INFO: working on the window ", w, sep=""))
-
 #############################
 ##### SOMATIC PHENOTYPE #####
 
 for(w in all_w){
+  
+  print(paste(date(), " INFO: working on the window ", w, sep=""))
   
   # extract window from germline VCF file
   system(paste(" bcftools view -r ", w, " ", germline_VCF, " | bgzip -c > window.vcf.gz", sep=""))
