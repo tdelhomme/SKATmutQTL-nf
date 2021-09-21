@@ -126,14 +126,8 @@ process create_input {
   file '*.Rdata'  optional true into skat_input
 
   shell:
-  tag = w
+  tag = wlist
   '''
-  bcftools view -r !{w} !{germline_VCF} | bgzip -c > window.vcf.gz
-  if [[ $(zcat window.vcf.gz | grep "^chr" | head -n1) ]]; then
-    tabix -p vcf window.vcf.gz
-    Rscript !{baseDir}/bin/create_input_data.R --wlist=!{wlist} --somatic_Rdata=!{somatic_Rdata} --somatic_files=!{somatic_files} --somatic_folder=!{somatic_folder} --germline_VCF=window.vcf.gz
-  else 
-    echo "empty germline window"
-  fi
+  Rscript !{baseDir}/bin/create_input_data.R --wlist=!{wlist} --somatic_Rdata=!{somatic_Rdata} --somatic_files=!{somatic_files} --somatic_folder=!{somatic_folder} --germline_VCF=window.vcf.gz
   '''
 }
