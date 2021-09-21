@@ -42,8 +42,8 @@ for(w in all_w){
   print(paste(date(), " INFO: working on the window ", w, sep=""))
   
   # extract window from germline VCF file
-  system(paste(" bcftools view -r ", w, " ", germline_VCF, " | bgzip -c > window.vcf.gz", sep=""))
-  system("tabix -p vcf window.vcf.gz")
+  system(paste(" ~/bin/bcftools_bin/bin/bcftools view -r ", w, " ", germline_VCF, " | bgzip -c > window.vcf.gz", sep=""))
+  system("tabix -f -p vcf window.vcf.gz")
   
     # check if empty VCF
   if( length(system("zcat window.vcf.gz | grep \"^chr\" | head -n1", intern=T)) == 1 ) {
