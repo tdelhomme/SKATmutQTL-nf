@@ -22,6 +22,7 @@ params.somatic_files = null
 params.germline_VCF = null
 params.output_folder = "input_data"
 params.mem = 8
+params.nwindow_list = 120
 
 log.info ""
 log.info "-----------------------------------------------------------------------"
@@ -47,6 +48,7 @@ if (params.help) {
     log.info ""
     log.info "Optional arguments:"
     log.info '--output_folder             FOLDER                 Output folder (default: input_data)'
+    log.info "--nwindow_list              INT                    Number of chunks of windows to be run in parallel (default=120)"
     log.info '--mem                       INT                    Memory to allocate'
     log.info ""
     log.info "Flags:"
@@ -83,7 +85,7 @@ process output_windows {
 
   shell:
   '''
-  Rscript !{baseDir}/bin/output_windows.R --df_windows=!{df_windows}
+  Rscript !{baseDir}/bin/output_windows.R --df_windows=!{df_windows} --nwindow_list=!{params.nwindow_list}
   '''
 }
 

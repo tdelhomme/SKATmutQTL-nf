@@ -13,6 +13,7 @@ if(! is.null(args$help)) {
   cat("
       Mandatory arguments:
       --w                         - Window (e.g. chr1_1_10000)
+      --somatic_files             - Text file containing in one column the list of the files to consider in input somatic folder
       --somatic_Rdata             - Rdata object containing the pre-loaded somatic files (gr_mut)
       --somatic_folder            - Input folder of somatic files
       --germline_VCF              - Germline VCF containing genotypes

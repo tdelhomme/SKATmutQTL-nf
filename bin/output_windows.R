@@ -32,7 +32,7 @@ for (id in 1:nrow(df_window_merge)){
 }
 chunk <- function(x, n) split(x, sort(rank(x) %% n))
 res = chunk(list_w, n = nwindow_list)
-for(idl in length(res)){
+for(idl in 1:length(res)){
   r = res[[idl]]
   for(rr in r){
     cat(r, file=paste("windows_id_", idl, ".txt", sep=""), append=T, sep= "\n")
