@@ -13,7 +13,7 @@ if(! is.null(args$help)) {
   cat("
       Mandatory arguments:
       --w                         - Window (e.g. chr1_1_10000)
-      --somatic_files             - Text file containing in one column the list of the files to consider in input somatic folder
+      --somatic_Rdata             - Rdata object containing the pre-loaded somatic files (gr_mut)
       --somatic_folder            - Input folder of somatic files
       --germline_VCF              - Germline VCF containing genotypes
       
@@ -25,8 +25,8 @@ library(data.table)
 library(GenomicRanges)
 library(readr)
 
-# load somatic data 
 if(is.null(args$somatic_files)) {stop("Option --somatic_files should be provided")} else{somatic_files=args$somatic_files}
+if(is.null(args$somatic_Rdata)) {stop("Option --somatic_Rdata should be provided")} else{ load(args$somatic_Rdata) }
 if(is.null(args$somatic_folder)) {stop("Option --somatic_folder should be provided")} else{somatic_folder=args$somatic_folder}
 if(is.null(args$germline_VCF)) {stop("Option --germline_VCF should be provided")} else{germline_VCF=args$germline_VCF}
 if(is.null(args$w)) {stop("Option --w should be provided")} else{w=args$w}
@@ -43,23 +43,8 @@ gr_wind = GRanges(seqnames = unlist(strsplit(w,":"))[1],
                   ranges = IRanges(start = as.numeric(unlist(strsplit(unlist(strsplit(w,":"))[2], "-"))[1]),
                                    end = as.numeric(unlist(strsplit(unlist(strsplit(w,":"))[2], "-"))[2])))
 
-res = lapply(files, function(f){
-  
-  #load data
-  ff = system(paste("ls ", somatic_folder, "/*", f, ".csv", sep=""), intern=T)
-  mut = read_csv(ff)
-  
-  # change colnames for consistency with Hartwig
-  if("reference_allele" %in% colnames(mut)) colnames(mut)[which(colnames(mut) == "reference_allele")] = "REF"
-  if("mutated_to_allele" %in% colnames(mut)) colnames(mut)[which(colnames(mut) == "mutated_to_allele")] = "ALT"
-  
-  mut = mut[(mut$REF %in% c('A', 'T', 'C', 'G') & mut$ALT %in% c('A', 'T', 'C', 'G')),]
-  mut = mut[!mut$chr %in% c('chrY'),]
-  
-  # make a VRange obj
-  gr_mut = GRanges(seqnames = mut$chr, ranges = IRanges(start = mut$start, end = mut$end))
-  counts <- sum(countOverlaps(gr_wind, gr_mut))
-})
+counts <- sum(countOverlaps(gr_wind, gr_mut)) # gr_mut is computed in extern
+
 mat_pheno = matrix(unlist(res), ncol = 1)
 rownames(mat_pheno) = files
 
