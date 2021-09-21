@@ -21,7 +21,6 @@ params.somatic_folder = null
 params.somatic_files = null
 params.germline_VCF = null
 params.output_folder = "input_data"
-params.mem = 8
 params.nwindow_list = 120
 
 log.info ""
@@ -75,8 +74,6 @@ df_windows = file(params.df_windows)
 
 process output_windows {
 
-  memory params.mem+'G'
-
   input:
   file df_windows
 
@@ -90,8 +87,6 @@ process output_windows {
 }
 
 process load_somatic {
-
-  memory params.mem+'G'
 
   input:
   file somatic_files
@@ -107,8 +102,6 @@ process load_somatic {
 }
 
 process create_input {
-
-  memory params.mem+'G'
 
   publishDir params.output_folder, mode: 'copy', pattern: "*.Rdata"
 

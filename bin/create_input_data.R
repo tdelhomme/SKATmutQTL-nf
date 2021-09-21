@@ -34,6 +34,8 @@ if(is.null(args$wlist)) {stop("Option --wlist should be provided")} else{all_w =
 
 #############################
 ##### SOMATIC PHENOTYPE #####
+t2in<-fread(somatic_files, head=FALSE)
+files <- as.character(t2in$V1)
 
 for(w in all_w){
   
@@ -43,10 +45,8 @@ for(w in all_w){
   system(paste(" bcftools view -r ", w, " ", germline_VCF, " | bgzip -c > window.vcf.gz", sep=""))
   system("tabix -p vcf window.vcf.gz")
   
-  # check if empty VCF
+    # check if empty VCF
   if( length(system("zcat window.vcf.gz | grep \"^chr\" | head -n1", intern=T)) == 1 ) {
-    t2in<-fread(somatic_files, head=FALSE)
-    files <- as.character(t2in$V1)
     
     gr_wind = GRanges(seqnames = unlist(strsplit(w,":"))[1], 
                       ranges = IRanges(start = as.numeric(unlist(strsplit(unlist(strsplit(w,":"))[2], "-"))[1]),
