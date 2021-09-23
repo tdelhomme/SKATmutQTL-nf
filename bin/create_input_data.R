@@ -25,6 +25,7 @@ if(! is.null(args$help)) {
 library(data.table)
 library(GenomicRanges)
 library(readr)
+library(VariantAnnotation)
 
 if(is.null(args$somatic_files)) {stop("Option --somatic_files should be provided")} else{somatic_files=args$somatic_files}
 if(is.null(args$somatic_Rdata)) {stop("Option --somatic_Rdata should be provided")} else{ load(args$somatic_Rdata) }
@@ -62,9 +63,7 @@ for(w in all_w){
     
     ####################
     ##### GENOTYPE #####
-    library(VariantAnnotation)
-    
-    vcf <- open(VcfFile("window.vcf.gz",  yieldSize=1000000))
+    vcf <- open(VcfFile("window.vcf.gz",  yieldSize=2000))
     vcf_chunk = readVcf(vcf, "hg19")
     
     # if we have no somatic mutation in the window OR no germline variants return NAs
