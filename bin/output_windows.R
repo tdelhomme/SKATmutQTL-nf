@@ -35,6 +35,6 @@ res = chunk(list_w, n = nwindow_list)
 for(idl in 1:length(res)){
   r = res[[idl]]
   for(rr in r){
-    cat(r, file=paste("windows_id_", idl, ".txt", sep=""), append=T, sep= "\n")
+    cat(rr, file=paste("windows_id_", idl, ".txt", sep=""), append=T, sep= "\n")
   }
 }
