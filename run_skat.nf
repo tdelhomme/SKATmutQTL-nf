@@ -49,7 +49,7 @@ if (params.help) {
 
 assert (params.input_folder != null) : "please provide the --input_folder option"
 
-input_files = Channel.fromPath( params.input_folder+'/*.Rdata' )
+input_files = Channel.fromPath( params.input_folder+'/*.Rdata' ).collate( 120 )
 
 process skat {
 
@@ -63,7 +63,7 @@ process skat {
 
   shell:
   '''
-  Rscript !{baseDir}/bin/SKAT.R --input_file=!{f}
+  Rscript !{baseDir}/bin/SKAT.R
   '''
 }
 
