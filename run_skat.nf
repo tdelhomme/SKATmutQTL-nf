@@ -53,6 +53,8 @@ input_files = Channel.fromPath( params.input_folder+'/*.Rdata' )
 
 process skat {
 
+  publishDir params.output_folder+"/PVALS/", mode: 'copy', pattern: "*pvalue*"
+
   input:
   file f from input_files
 
