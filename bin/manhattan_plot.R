@@ -36,6 +36,8 @@ dd = data.frame(pvalues = all_p,
                 chr=unlist(lapply(w, function(w0) unlist(strsplit(w0, ":"))[1])),
                 pos=unlist(lapply(w, function(w0) { ( as.numeric(unlist(strsplit(unlist(strsplit(w0, ":"))[2],"-"))[1]) + 5000 ) })))
 
+pdf(paste(dd$chr, ".pdf", sep=""))
+
 manhattan.plot(dd$chr, dd$pos, dd$pvalue)
 
 # second plot
@@ -44,3 +46,4 @@ dd$snp = "snp"
 dd$chr_name = as.numeric(gsub("chr", "", dd$chr))
 manhattan(dd, chr="chr_name", bp="pos", p="pvalues", snp="snp")
 
+dev.off()
