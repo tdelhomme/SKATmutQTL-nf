@@ -21,7 +21,12 @@ if(! is.null(args$help)) {
 }
 
 if(is.null(args$df_windows)) {stop("Option --df_windows should be provided")} else{df_windows=args$df_windows}
-if(is.null(args$nwindow_list)) {stop("Option --nwindow_list should be provided")} else{nwindow_list=as.numeric(args$nwindow_list)}
+if(is.null(args$nwindow_list) & is.null(args$bed_overlap)) {stop("Option --nwindow_list OR --bed_overlap should be provided")} 
+if(!is.null(args$nwindow_list)) {nwindow_list=as.numeric(args$nwindow_list)} 
+if(!is.null(args$bed_overlap)) {
+  library(GenomicRanges)
+  bed = makeGRangesFromDataFrame(read.table(args$bed_overlap, h=T, stringsAsFactors = F))
+} 
 load(df_windows)
 
 # create one empty file per window to run the scripts in parallel across windows
@@ -31,8 +36,15 @@ for (id in 1:nrow(df_window_merge)){
   #system(paste("touch ", w, sep=""))
   list_w = c(list_w , w)
 }
-chunk <- function(x, n) split(x, sort(rank(x) %% n))
-res = chunk(list_w, n = nwindow_list)
+
+if(!is.null(args$nwindow_list)){
+  chunk <- function(x, n) split(x, sort(rank(x) %% n))
+  res = chunk(list_w, n = nwindow_list)
+}
+if(!is.null(args$bed_overlap)){
+
+}
+
 for(idl in 1:length(res)){
   r = res[[idl]]
   for(rr in r){
