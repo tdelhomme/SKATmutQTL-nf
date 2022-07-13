@@ -73,17 +73,19 @@ somatic_folder = file(params.somatic_folder)
 germline_VCF = file(params.germline_VCF)
 germline_VCF_tbi = file(params.germline_VCF + ".tbi")
 df_windows = file(params.df_windows)
+bed_overlap_file = file(params.bed_overlap)
 
 process output_windows {
 
   input:
   file df_windows
+  file bed_overlap_file
 
   output:
   file 'window*' into wind_list mode flatten
 
   shell:
-  if (params.bed_overlap=="null") { par="--nwindow_list=!{params.nwindow_list}" } else { par="--bed_overlap=!{params.bed_overlap}" }
+  if (params.bed_overlap=="null") { par="--nwindow_list=${params.nwindow_list}" } else { par="--bed_overlap=${bed_overlap_file}" }
   '''
   Rscript !{baseDir}/bin/output_windows.R --df_windows=!{df_windows} !{par} 
   '''
