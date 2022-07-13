@@ -22,6 +22,7 @@ params.somatic_files = null
 params.germline_VCF = null
 params.output_folder = "input_data"
 params.nwindow_list = 120
+params.bed_overlap = null
 
 log.info ""
 log.info "-----------------------------------------------------------------------"
@@ -48,6 +49,7 @@ if (params.help) {
     log.info "Optional arguments:"
     log.info '--output_folder             FOLDER                 Output folder (default: input_data)'
     log.info "--nwindow_list              INT                    Number of chunks of windows to be run in parallel (default=120)"
+    log.info "--bed_overlap               FILE                   BED file containing positions to extract windows, in list, that are overlapping"
     log.info '--mem                       INT                    Memory to allocate'
     log.info ""
     log.info "Flags:"
@@ -81,7 +83,7 @@ process output_windows {
   file 'window*' into wind_list mode flatten
 
   shell:
-  if (params.nwindow_list!="null") { par="--nwindow_list=!{params.nwindow_list}" } else { par="--bed_overlap=!{params.bed_overlap}" }
+  if (params.bed_overlap=="null") { par="--nwindow_list=!{params.nwindow_list}" } else { par="--bed_overlap=!{params.bed_overlap}" }
   '''
   Rscript !{baseDir}/bin/output_windows.R --df_windows=!{df_windows} !{par} 
   '''
