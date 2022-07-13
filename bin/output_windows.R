@@ -14,7 +14,7 @@ if(! is.null(args$help)) {
       Mandatory arguments:
       --df_windows                 - Input Rdata file that contains all the windows to be splitted
       --nwindow_list               - number of chunks containing all the windows
-        OR --genome_overlap        - a dataframe with header CHR START END, windows overlapping each line (genomic pos) will be grouped for the skat test
+        OR --bed_overlap        - a dataframe with header CHR START END, windows overlapping each line (genomic pos) will be grouped for the skat test
       Optional arguments:
       --help \n\n")
   q(save="no")
