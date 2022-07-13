@@ -81,8 +81,9 @@ process output_windows {
   file 'window*' into wind_list mode flatten
 
   shell:
+  if (params.nwindow_list!="null") { par="--nwindow_list=!{params.nwindow_list}" } else { par="--bed_overlap=!{params.bed_overlap}" }
   '''
-  Rscript !{baseDir}/bin/output_windows.R --df_windows=!{df_windows} --nwindow_list=!{params.nwindow_list}
+  Rscript !{baseDir}/bin/output_windows.R --df_windows=!{df_windows} !{par} 
   '''
 }
 
