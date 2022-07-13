@@ -29,20 +29,30 @@ if(!is.null(args$bed_overlap)) {
 } 
 load(df_windows)
 
-# create one empty file per window to run the scripts in parallel across windows
-list_w = c()
-for (id in 1:nrow(df_window_merge)){
-  w = paste(df_window_merge[id,"chr"], ":", df_window_merge[id,"start"], "-", df_window_merge[id,"end"], sep="")
-  #system(paste("touch ", w, sep=""))
-  list_w = c(list_w , w)
-}
 
 if(!is.null(args$nwindow_list)){
+  # create one empty file per window to run the scripts in parallel across windows
+  list_w = c()
+  for (id in 1:nrow(df_window_merge)){
+    w = paste(df_window_merge[id,"chr"], ":", df_window_merge[id,"start"], "-", df_window_merge[id,"end"], sep="")
+    #system(paste("touch ", w, sep=""))
+    list_w = c(list_w , w)
+  }
   chunk <- function(x, n) split(x, sort(rank(x) %% n))
   res = chunk(list_w, n = nwindow_list)
 }
-if(!is.null(args$bed_overlap)){
 
+if(!is.null(args$bed_overlap)){
+  res = list()
+  df_window_merge_gr = makeGRangesFromDataFrame(df_window_merge[,c("chr", "start", "end")])
+  tmp = as.data.frame(findOverlaps(bed, df_window_merge_gr))
+  for(bed_wind_id in unique(tmp$queryHits) ){
+    tmpw = df_window_merge[ tmp[which(tmp$queryHits == bed_wind_id), "subjectHits"], ] # for wind id in the bed, return overlap windows in df_window_merge
+    ll = unlist(lapply(1:nrow(tmpw), function(id){
+      paste(tmpw[id,"chr"], ":", tmpw[id,"start"], "-", tmpw[id,"end"], sep="")
+    }))
+    res[[bed_wind_id]] = ll
+  }
 }
 
 for(idl in 1:length(res)){
