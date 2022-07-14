@@ -77,6 +77,8 @@ bed_overlap_file = file(params.bed_overlap)
 
 process output_windows {
 
+  publishDir params.output_folder, mode: 'copy', pattern: "list_windows_per_signSNP.Rdata"
+
   input:
   file df_windows
   file bed_overlap_file

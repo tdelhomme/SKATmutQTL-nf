@@ -53,6 +53,7 @@ if(!is.null(args$bed_overlap)){
     }))
     res[[bed_wind_id]] = ll
   }
+  save(res, file="list_windows_per_signSNP.Rdata")
 }
 
 for(idl in 1:length(res)){
